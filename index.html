@@ -4,10 +4,21 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Sparsity and Deep Learning for Modern Surveys</title>
 
+		<meta name="description" content="Presentation for the Cosmo21 conference">
+		<meta name="author" content="Francois Lanusse">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<!-- Loading Bootstrap -->
+		<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		-->
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+		<link rel="stylesheet" href="css/theme/mytheme.css">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -24,8 +35,497 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<!-- Each section is a slide -->
+				<section>
+					<div class="container">
+						<div class="title">
+							<h2>Sparsity and Deep Learning for Modern Surveys</h2>
+							<p>Statistical Challenges in 21st Century Cosmology -- Valencia, Spain</p>
+						</div>
+				</div>
+				<hr>
+				<div class="container">
+
+					<div class="col">
+						<h3>François Lanusse</h3>
+					</div>
+					<div class="col">
+						<img src="assets/cosmology2.png" class="plain"></img>
+					</div>
+				</div>
+				</section>
+
+				<!-- Intro -->
+			<section>
+				<section>
+					<h3>The Large Synoptic Survey Telescope</h3>
+					<img width="780" data-src="assets/lsst3.jpg" class="plain"></img>
+				<div class="col">
+					<ul>
+						<li class="fragment fade-up"> 18,000 square degrees, observed once every few days</li>
+						<li class="fragment fade-up"> 1000 images each night , 15 TB/night for 10 years </li>
+						<li class="fragment fade-up"> Tens of billions of objects, each one observed $\sim1000$ times </li>
+					</ul>
+				</div>
+				<br>
+				<br>
+				<div class="fragment fade-up"> $\Longrightarrow$ Unprecedented volume of data</div>
+			</section>
+
+			<section>
+				<img data-src="assets/bcg_comparison.png" class="plain"></img>
+				<div style="float:right; font-size: 20px;"> Huang et al. (2017)</div>
+				<br>
+				<br>
+				<div class="fragment fade-up"> $\Longrightarrow$ Unprecedented complexity of data</div>
+			</section>
+
+			<section>
+			<h3>The challenges of modern surveys</h3>
+			<br>
+					<ul>
+						<li class="fragment fade-up"> Handling the increased data rates </li>
+						<br>
+						<li class="fragment fade-up"> Accessing the information present in the data </li>
+						<br >
+						<li class="fragment fade-up"> Controlling systematic errors </li>
+					</ul>
+			</section>
+		</section>
+
+				<section>
+					<h1> Sparsity </h1>
+				</section>
+
+				<section>
+					$y =  \mathbf{A} x + n$
+					<br>
+					<br>
+					<span class="fragment">$\mathbf{A}$ non-invertible or ill-conditioned <br>$\Longrightarrow$
+					ill-posed inverse  problem with no unique solution $ x$ </span>
+
+					<div class="container fragment fade-up">
+							<div class="col">
+								<img data-src="assets/pluto_smooth.png" class="plain"></img>
+								Deconvolution
+							</div>
+							<div class="col">
+								<img data-src="assets/pluto_missing.png" class="plain"></img>
+								Inpainting
+							</div>
+							<div class="col">
+								<img data-src="assets/plutoNoise.png" class="plain"></img>
+								Denoising
+							</div>
+					</div>
+				</section>
+
+				<section>
+					<h3> The sparse recovery framework</h3>
+					<ul>
+						<li class="fragment fade-up"> Sparsity as a powerful and generic signal prior
+							<br>
+						<img width=400  data-src="assets/wavelet.png" >
+
+				<li class="fragment fade-up"> Fast algorithms for recovering a MAP solution
+					<br>
+					<br>
+					$\mathrm{argmin}_{x} \quad \parallel y - A x \parallel_2^2  \ + \  \lambda \parallel \Phi^* x \parallel_1$
+			</ul>
+				</section>
+
+			<section>
+				<h3> The GLIMPSE mass-mapping algorithm</h3>
+
+				<img height=400 data-src="assets/A520.png"></img>
+				<br>
+				<div style="float:right; font-size: 20px;"> Peel, Lanusse, Starck (2017)</div>
+
+		$\mathrm{argmin}_\kappa \frac{1}{2} \parallel \mathcal{C}_\kappa^{-1} ( (1 - \kappa) g - \mathbf{T} \  \mathbf{Q} \ \mathbf{F} \kappa ) \parallel_2^2 + \lambda \parallel \Phi^* \kappa \parallel_1  + \ i_{\mathbb{R}}(\kappa)$
+								<br>
+		$\mathrm{argmin}_\delta \frac{1}{2} \parallel \mathcal{C}_\kappa^{-1} ( (1-\kappa) g - \mathbf{T} \ \mathbf{P} \ \mathbf{Q} \ \mathbf{F} \delta ) \parallel_2^2 + \lambda \parallel \Phi^* \delta \parallel_1  + \ i_{>0}(\delta)$
+					<br>
+					<br>
+
+				<ul>
+					<li> Includes reduced shear and individual redshift PDFs
+					<li> Solved using proximal adapted from (Vu, 2013)
+				</ul>
+				<div class="container">
+				<div style="float:right; font-size: 20px;"> Lanusse et al. (2016)</div>
+				<br>
+				<div style="float:right; font-size: 20px;"> Lanusse & Starck, in prep.</div>
+			</div>
+			</section>
+
+			<section>
+				<section>
+					<h3>3D reconstruction of the COSMOS field</h3>
+					<div style="position:relative; width:780px; height:480px; margin:0 auto;">
+						<img width=780 data-src="assets/cosmos_no_clusters.png" class="plain  current-visible " style="position:absolute;top:0;left:0;"></img>
+						<img width=780 data-src="assets/cosmos_clusters.png" class="plain fragment current-visible" style="position:absolute;top:0;left:0;"></img>
+					</div>
+					<div class="container">
+						<div class="col">
+							Transverse Wiener Filter
+						</div>
+
+						<div class="col">
+							Glimpse
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<div class="container">
+						<div class="col" id="weinerReconstruction">
+							<iframe  width="400" height="400" data-src="3drender.html?file=assets/cosmos_wiener_0.01.nii.gz"></iframe>
+						</div>
+						<div class="col" id="sparseReconstruction">
+							<iframe  width="400" height="400" data-src="3drender.html?file=assets/cosmos_glimpse2.nii.gz"></iframe></div>
+					</div>
+				</section>
+			</section>
+
+				<section>
+					<h3> A few  comments</h3>
+
+					<br>
+					<br>
+
+					$\mathrm{argmin}_{x} \quad \parallel y - A x \parallel_2^2  \ + \  \lambda \parallel \Phi^* x \parallel_1$
+
+					<br>
+					<br>
+					<ul>
+						<li class="fragment"> Relies on knowledge of $\mathbf{A}$
+							<br>
+							<br>
+						<li class="fragment"> Requires expert knowledge to choose $\Phi$
+					</ul>
+				</section>
+
+				<section>
+					<h1> Deep Learning </h1>
+				</section>
+
+				<section>
+							<h3>In the news lately... </h3>
+					<div class='container'>
+						<div class='col'>
+							<div style="position:relative; width:480px; height:300px; margin:0 auto;">
+							  <img class="fragment current-visible plain" data-src="assets/self-driving_uber.jpg" style="position:absolute;top:0;left:0;" data-fragment-index="0" />
+							  <img class="fragment current-visible plain" data-src="assets/poker.jpg" style="position:absolute;top:0;left:0;" data-fragment-index="1" />
+							  <img class="fragment current-visible plain" data-src="assets/google_go1.jpg" style="position:absolute;top:0;left:0;" data-fragment-index="2" />
+							  <img class="fragment plain" data-src="assets/google_go.jpg" style="position:absolute;top:0;left:0;" data-fragment-index="3" />
+							</div>
+						</div>
+
+						<div class='col'>
+					<ul>
+						<li class="fragment" data-fragment-index="0"> Self-driving Uber takes the road in Pittsburgh (Sept. 2016) </li>
+						<br>
+						<li class="fragment" data-fragment-index="1"> CMU's Libratus beats top poker players (Jan. 2017) </li>
+						<br>
+						<li class="fragment" data-fragment-index="2"> Google's AlphaGo beats world's top Go player (May 2017) </li>
+					</ul>
+						</div>
+					</div>
+
+					<br>
+
+					<span class="fragment fade-up">Technological revolution brought about by the advancement of Deep Learning.</span>
+				</section>
+
+				<!-- Section on strong gravitational lenses -->
+				<section>
+					<h3> A concrete example</h3>
+
+					<div class="container">
+						<div class="col">
+							<img data-src="assets/figure3.jpg" class="plain">
+						</div>
+						<div class="col">
+							<img data-src="assets/heic1702b.jpg" class="plain">
+						</div>
+					</div>
+					<div >
+							<script type="math/tex; mode=display">
+						 		\Delta t_{i j} = \frac{1 + z_{L}}{c} \ \underbrace{\frac{D_{L} \  D_{S}}{ D_{L S}}}_{\propto \ H_0^{-1}} \ \left[ \frac{(\theta_i -\beta)^2}{2} - \psi(\theta_i) + \frac{(\theta_j - \beta)^2}{2} + \psi(\theta_j) \right]
+						</script>
+					</div>
+			</section>
+
+			<section data-background="assets/fig1w.png">
+			</section>
+
+			<section data-background="assets/fig1.png">
+			</section>
+
+			<section data-background="assets/hsc_illustration_tract.png">
+				<h3>WWAD: <span class="fragment">What Would an Astrophysicist Do ?</span></h3>
+				<div class="fragment fade-up">
+				<img data-src="assets/fig2.png">
+				<div class="container">
+					<div class="col"> gri composite </div>
+					<div class="col"> g - $\alpha$ i </div>
+					<div class="col"> detected areas </div>
+					<div class="col"> HST images </div>
+				</div>
+				<br>
+				<div style="float:right; font-size: 20px;"> RingFinder (Gavazzi et al. 2014) </div>
+				</div>
+				<br>
+				<br>
+				<div class="fragment fade-up">Requires ~30 person-minute/sq. deg. for visual inspection</div>
+			</section>
+
+				<section>
+					<canvas data-chart="bar">
+					<!--
+					{
+					 "data": {
+					  "labels": ["CFHTLS"," DES", "LSST"],
+					  "datasets": [
+					   {
+					    "data":[220, 2400, 120000],
+					    "label":"Number of strong lenses","backgroundColor":"#374A67"
+					   },
+					   {
+					    "data":[75, 2500, 10000],
+					    "label":"Person-hour required for visual inspection [RingFinder]","backgroundColor":"#A63446"
+					   }
+					  ]
+					 },
+					 "options": { "responsive": "true",
+        "scales": {
+            "yAxes": [{
+                "type": "logarithmic"
+            }]
+        }
+ 					}
+					}
+					-->
+				</canvas>
+				<div style="float:right; font-size: 20px">Gavazzi et al. (2014), Collett (2015)</div>
+					<br>
+					<br>
+					<div class="fragment fade-up">Plainly intractable at the scale of LSST</div>
+				</section>
+
+				<section>
+					<h3> A conventional Convolutional Neural Network</h3>
+					<img data-src="assets/single_layer.png" class="plain"></img>
+				</section>
+
+				<section>
+					<div class="container">
+						<div class="col">
+							<img height="600px" data-src="assets/residual_unit.png" class="plain">
+							<br>
+							Preactivated Residual<br> (He et al. 2016)
+						</div>
+						<div class="col">
+							<img height="600px"  data-src="assets/deeplens.png" class="plain">
+							<br>
+							CMUDeepLens Architecture<br> (Lanusse et al. 2017)
+						</div>
+				</section>
+
+				<section>
+					<h3>Some CMUDeepLens results</h3>
+					<div class="container">
+						<div class="col">
+					<img height=200 data-src="assets/candidates.png" class="plain">
+					<br>
+					<br>
+					True Positive Rate = $\frac{TP}{TP + FN}$
+					<br>
+					<br>
+					<ul>
+						<li> $TP$: True Positives
+						<li> $FN$: False Negatives
+					</ul>
+				</div>
+						<div class="col">
+							<img height=200 data-src="assets/roc_curves.png" class="plain">
+						<br>
+						<br>
+						False Positive Rate = $\frac{FP}{FP + TN}$
+						<br>
+						<br>
+						<ul>
+							<li> $FP$: False Positives
+							<li> $TN$: True Negatives
+						</ul>
+					</div>
+				</div>
+				</section>
+
+				<section>
+					<h3>The Euclid strong-lens finding challenge</h3>
+					<div class="container">
+						<div class="col">
+							<img height=200 data-src="assets/ground_lenses.png"></img>
+						</div>
+						<div class="col">
+							<img height=200 data-src="assets/space_based.jpg"></img>
+						</div>
+					</div>
+					<img data-src="assets/roc_ground_small.png" class="plain fragment fade-up"></img>
+
+					<div class="fragment fade-up"> Better accuracy than human visual inspection !</div>
+				</section>
+
+				<section>
+					<h3>The promise of Deep Learning</h3>
+					<br>
+					<br>
+					<ul>
+						<li> Purely data-driven
+						<br>
+						<li> Little expert knowledge necessary
+						<br>
+						<li> No painstacking feature design
+					</ul>
+				</section>
+
+				<section>
+					<h1>Deep Generative Models</h1>
+				</section>
+
+				<section>
+					<section>
+					<h3>The need for complex data models</h3>
+					<div class="container">
+						<div class="col">
+							<img data-src="assets/real_gal-inv.png"></img>
+							<br>
+						</div>
+
+						<div class="col">
+							<img data-src="assets/great3_calib2-inv.png"></img>
+						</div>
+					</div>
+				</section>
+
+				<section data-background-video="assets/illustris_movie_cube_sub_frame.mp4">
+						<img data-src="assets/baryons_ed.png" class="fragment fade-up">
+				</section>
+				</section>
+
+				<section>
+					<h3> The need for data-driven generative models </h3>
+					<br>
+					<br>
+					<ul>
+							<li> Lack or inadequacy of physical model
+							<li> Extremely computationally expensive simulations
+					</ul>
+					<br>
+					<br>
+					<div class="fragment fade-up"> Can we learn a model for the signal from the data ?</div>
+
+				</section>
+
+				<section>
+					<h3> The evolution of generative models </h3>
+					<div class='container'>
+						<div class='col'>
+							<div style="position:relative; width:480px; height:300px; margin:0 auto;">
+								<img class="fragment current-visible plain" data-src="assets/DBN.png" style="position:absolute;top:0;left:0;" data-fragment-index="0" />
+								<img class="fragment current-visible plain" data-src="assets/vae_faces.jpg" style="position:absolute;top:0;left:0;" data-fragment-index="1" />
+								<img class="fragment current-visible plain" data-src="assets/gan-samples-1.png" style="position:absolute;top:0;left:0;" data-fragment-index="2" />
+								<img class="fragment plain" data-src="assets/karras2017.png" style="position:absolute;top:0;left:0;" data-fragment-index="3" />
+							</div>
+						</div>
+
+						<div class='col'>
+					<ul>
+						<li class="fragment" data-fragment-index="0"> Deep Belief Network <br> (Hinton et al. 2006) </li>
+						<br>
+						<li class="fragment" data-fragment-index="1"> Variational AutoEncoder <br> (Kingma & Welling 2014) </li>
+						<br>
+						<li class="fragment" data-fragment-index="2"> Generative Adversarial Network <br> (Goodfellow et al. 2014)</li>
+						<br>
+						<li class="fragment" data-fragment-index="3"> Wasserstein GAN <br> (Arjovsky et al. 2017) </li>
+					</ul>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h3> A visual Turing test </h3>
+					<div class="container">
+							<div class="col">
+								<img data-src="assets/samples_pixel_cnn.png" class="plain"></img>
+								<br>
+								<div class="fragment fade-up" data-fragment-index="0"> Fake PixelCNN samples </div>
+							</div>
+							<div class="col">
+								<img data-src="assets/sdss5.png" class="plain"></img>
+								<br>
+								<div class="fragment fade-up" data-fragment-index="0"> Real SDSS </div>
+							</div>
+					</div>
+				</section>
+
+				<section>
+					<section>
+					<h3> Learning COSMOS galaxy morphologies </h3>
+						<img data-src="assets/vae_samples2.png" class="plain"></img>
+					</section>
+
+					<section>
+						<img data-src="assets/conditional_model.png" class="plain" ></img>
+					</section>
+				</section>
+
+				<section>
+					<section>
+					<h3> Learning the galaxy-halo connection </h3>
+						<img data-src="assets/stellar_mass.png" class="plain"></img>
+						<div style="float:right; font-size: 20px;"> Lanusse et al. (in prep.)</div>
+				</section>
+				<section>
+					<img data-src="assets/misalignment.png" class="plain" ></img>
+				</section>
+				</section>
+				<section data-background-iframe="graph.html" data-background-interactive>
+				</section>
+
+				<section>
+					<h3> Deep Learning on graphs </h3>
+						<img data-src="assets/gcn_web.png" class="plain">
+						<br>
+						<div style="float:right; font-size: 20px;"> Kipf & Welling  (2017)</div>
+				</section>
+				<section>
+						<img width=600 data-src="assets/graphIA2.png" class="plain">
+						<br>
+						Preliminary results on graph MDN model
+						<div style="float:right; font-size: 20px;"> Lanusse et al. (in prep.)</div>
+				</section>
+			</section>
+
+			<section>
+				<h1>Conclusion</h1>
+			</section>
+
+			<section>
+				<h3>Conclusions</h3>
+
+				<ul>
+					<li class="fragment fade-up"> Mathematics based methods should be used whenever possible</li>
+					<br>
+					<br>
+					<li class="fragment fade-up"> Deep Learning allows you to automatize Machine Learning</li>
+					<br>
+					<br>
+					<li class="fragment fade-up"> Generative models will be a key element in making our simulations more realistic</li>
+				<ul>
+			</section>
+
 			</div>
 		</div>
 
@@ -40,10 +540,56 @@
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'bower_components/reveal.js-plugins/chart/Chart.min.js' },
+					{ src: 'bower_components/reveal.js-plugins/chart/csv2chart.js' },
+					{ src: 'bower_components/reveal.js-plugins/anything/anything.js' },
 					{ src: 'plugin/notes/notes.js', async: true },
+					// MathJax
+					{ src: 'plugin/math/math.js', async: true },
 					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-				]
+				],
+
+				chart: {
+		defaults: {
+			global: {
+				defaultFontSize: 18,
+				title: { fontColor: "#FFF" },
+				legend: {
+					labels: { fontColor: "#FFF" },
+				},
+			},
+			scale: {
+				scaleLabel: { fontColor: "#FFF" },
+				gridLines: { color: "#282828", zeroLineColor: "#FFF" },
+				ticks: { fontColor: "#FFF" },
+			}
+		},
+		line: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ], "borderDash": [ [5,10], [0,0] ]},
+		bar: { backgroundColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]},
+		pie: { backgroundColor: [ ["rgba(0,0,0,.8)" , "rgba(220,20,20,.8)", "rgba(20,220,20,.8)", "rgba(220,220,20,.8)", "rgba(20,20,220,.8)"] ]},
+		radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]},
+	},
+
+				viewDistance: 3,
+
+				// Display the page number of the current slide
+				slideNumber: false,
+
+				transition: 'convex',
+				// The "normal" size of the presentation, aspect ratio will be preserved
+				// when the presentation is scaled to fit different resolutions. Can be
+				// specified using percentage units.
+				width: 960,
+				height: 700,
+
+				// Factor of the display size that should remain empty around the content
+				margin: 0.1,
+
+				// Bounds for smallest/largest possible scale to apply to content
+				minScale: 0.2,
+				maxScale: 1.5
 			});
+
 		</script>
 	</body>
 </html>
